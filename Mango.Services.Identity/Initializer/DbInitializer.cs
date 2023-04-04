@@ -26,7 +26,10 @@ public class DbInitializer : IDbInitializer
             _roleManager.CreateAsync(new IdentityRole(SD.Admin)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(SD.Customer)).GetAwaiter().GetResult();
         }
-        else { return; }
+        else
+        {
+            return;
+        }
 
         var adminUser = new ApplicationUser()
         {
@@ -48,7 +51,7 @@ public class DbInitializer : IDbInitializer
                 new Claim(JwtClaimTypes.Role, SD.Admin),
             }).Result;
 
-        ApplicationUser customerUser = new ApplicationUser()
+        var customerUser = new ApplicationUser()
         {
             UserName = "customer1@gmail.com",
             Email = "customer1@gmail.com",

@@ -16,8 +16,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-//--------------
-
 var IdentityBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.Events.RaiseErrorEvents = true;
@@ -34,8 +32,6 @@ var IdentityBuilder = builder.Services.AddIdentityServer(options =>
 IdentityBuilder.AddDeveloperSigningCredential();
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-
-//--------------
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

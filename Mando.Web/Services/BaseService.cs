@@ -1,74 +1,87 @@
-﻿using Mando.Web.Models;
-using Mando.Web.Services.IServices;
+﻿using Mango.Web.Models;
+using Mango.Web.Services.IServices;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Mando.Web.Services;
-
-public class BaseService : IBaseService
+namespace Mango.Web.Services
 {
-    public ResponseDto responseModel { get; set; }
-
-    public IHttpClientFactory httpClient { get; set; }
-
-    public BaseService(IHttpClientFactory httpClient)
+    public class BaseService : IBaseService
     {
-        responseModel = new ResponseDto();
-        this.httpClient = httpClient;
-    }
+        public ResponseDto responseModel { get; set; }
+        public IHttpClientFactory httpClient { get; set; }
 
-    public async Task<T> SendAsync<T>(ApiRequest apiRequest)
-    {
-        try
+        public BaseService(IHttpClientFactory httpClient)
         {
-            var client = httpClient.CreateClient("MangoAPI");
+            this.responseModel = new ResponseDto();
+            this.httpClient = httpClient;
+        }
 
-            HttpRequestMessage message = new HttpRequestMessage();
-            message.Headers.Add("Accept", "application/json");
-            message.RequestUri = new Uri(apiRequest.Url);
-
-            client.DefaultRequestHeaders.Clear();
-
-            if (apiRequest.Data != null)
+        public async Task<T> SendAsync<T>(ApiRequest apiRequest)
+        {
+            try
             {
-                message.Content =
-                    new StringContent(JsonConvert.SerializeObject(apiRequest.Data), Encoding.UTF8, "application/json");
+                var client = httpClient.CreateClient("MangoAPI");
+                HttpRequestMessage message = new HttpRequestMessage();
+                message.Headers.Add("Accept", "application/json");
+                message.RequestUri = new Uri(apiRequest.Url);
+                client.DefaultRequestHeaders.Clear();
+                if (apiRequest.Data != null)
+                {
+                    message.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data),
+                        Encoding.UTF8,"application/json");
+                }
+
+                if (!string.IsNullOrEmpty(apiRequest.AccessToken))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiRequest.AccessToken);
+                }
+
+                HttpResponseMessage apiResponse = null;
+                switch (apiRequest.ApiType)
+                {
+                    case SD.ApiType.POST:
+                        message.Method = HttpMethod.Post;
+                        break;
+                    case SD.ApiType.PUT:
+                        message.Method = HttpMethod.Put;
+                        break;
+                    case SD.ApiType.DELETE:
+                        message.Method = HttpMethod.Delete;
+                        break;
+                    default :
+                        message.Method = HttpMethod.Get;
+                        break;
+                }
+                apiResponse = await client.SendAsync(message);
+
+                var apiContent = await apiResponse.Content.ReadAsStringAsync();
+                var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
+                return apiResponseDto;
+
             }
-
-            message.Method = apiRequest.ApiType switch
+            catch(Exception e)
             {
-                SD.ApiType.POST => HttpMethod.Post,
-                SD.ApiType.PUT => HttpMethod.Put,
-                SD.ApiType.DELETE => HttpMethod.Delete,
-                _ => HttpMethod.Get,
-            };
-
-            HttpResponseMessage apiResponse = await client.SendAsync(message);
-
-            var apiContent = await apiResponse.Content.ReadAsStringAsync();
-            var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
-
-            return apiResponseDto;
+                var dto = new ResponseDto
+                {
+                    DisplayMessage = "Error",
+                    ErrorMessages = new List<string> { Convert.ToString(e.Message) },
+                    IsSuccess = false
+                };
+                var res = JsonConvert.SerializeObject(dto);
+                var apiResponseDto = JsonConvert.DeserializeObject<T>(res);
+                return apiResponseDto;
+            }
         }
-        catch (Exception e)
+
+        public void Dispose()
         {
-            var dto = new ResponseDto
-            {
-                DisplayMessage = "Error",
-                ErrorMessages = new List<string> { Convert.ToString(e.Message) },
-                IsSuccess = false
-            };
-
-            var res = JsonConvert.SerializeObject(dto);
-            var apiResponseDto = JsonConvert.DeserializeObject<T>(res);
-
-            return apiResponseDto;
+            GC.SuppressFinalize(true);
         }
     }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(true);
-    }
-
 }

@@ -1,6 +1,12 @@
-﻿namespace Mango.Services.Identity.Initializer;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public interface IDbInitializer
+namespace Mango.Services.Identity.Initializer
 {
-    void Initialize();
+    public interface IDbInitializer
+    {
+        public void Initialize();
+    }
 }

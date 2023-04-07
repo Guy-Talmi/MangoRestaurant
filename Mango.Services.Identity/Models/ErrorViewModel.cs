@@ -1,3 +1,5 @@
+using System;
+
 namespace Mango.Services.Identity.Models
 {
     public class ErrorViewModel

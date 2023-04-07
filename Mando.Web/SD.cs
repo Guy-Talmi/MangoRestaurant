@@ -1,14 +1,21 @@
-﻿namespace Mando.Web;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public static class SD
+namespace Mango.Web
 {
-    public static string ProductAPIBase { get; set; }
-
-    public enum ApiType
+    public static class SD
     {
-        GET,
-        POST,
-        PUT,
-        DELETE,
+        public static string ProductAPIBase { get; set; }
+        public static string ShoppingCartAPIBase { get; set; }
+        public static string CouponAPIBase { get; set; }
+        public enum ApiType
+        {
+            GET,
+            POST,
+            PUT,
+            DELETE
+        }
     }
 }

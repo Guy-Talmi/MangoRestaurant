@@ -1,13 +1,16 @@
-﻿
-namespace Mando.Web.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static Mango.Web.SD;
 
-public class ApiRequest
+namespace Mango.Web.Models
 {
-    public SD.ApiType ApiType { get; set; } = SD.ApiType.GET;
-
-    public string Url { get; set; }
-
-    public object Data { get; set; }
-
-    public string AccessToken { get; set; }
+    public class ApiRequest
+    {
+        public ApiType ApiType { get; set; } = ApiType.GET;
+        public string Url { get; set; }
+        public object Data { get; set; }
+        public string AccessToken { get; set; }
+    }
 }

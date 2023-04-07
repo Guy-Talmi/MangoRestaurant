@@ -32,6 +32,7 @@ namespace Mango.Services.Identity
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
@@ -71,9 +72,11 @@ namespace Mango.Services.Identity
             app.UseStaticFiles();
 
             app.UseRouting();
+            
             app.UseIdentityServer();
             app.UseAuthorization();
             dbInitializer.Initialize();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -247,6 +247,7 @@ namespace IdentityServerHost.Quickstart.UI
 				};
 
 				var result = await _userManager.CreateAsync(user, model.Password);
+				
 				if (result.Succeeded)
 				{
 					if (!_roleManager.RoleExistsAsync(model.RoleName).GetAwaiter().GetResult())
@@ -272,6 +273,7 @@ namespace IdentityServerHost.Quickstart.UI
 
 					var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 					var loginresult = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, lockoutOnFailure: true);
+
 					if (loginresult.Succeeded)
 					{
 						var checkuser = await _userManager.FindByNameAsync(model.Username);

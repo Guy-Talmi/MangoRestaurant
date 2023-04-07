@@ -24,10 +24,12 @@ namespace Mango.Web.Controllers
             List<ProductDto> list = new();
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             var response = await _productService.GetAllProductsAsync<ResponseDto>(accessToken);
+            
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));
             }
+
             return View(list);
         }
 
@@ -35,6 +37,7 @@ namespace Mango.Web.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProductCreate(ProductDto model)
@@ -43,32 +46,7 @@ namespace Mango.Web.Controllers
             {
                 var accessToken = await HttpContext.GetTokenAsync("access_token");
                 var response = await _productService.CreateProductAsync<ResponseDto>(model, accessToken);
-                if (response != null && response.IsSuccess)
-                {
-                    return RedirectToAction(nameof(ProductIndex));
-                }
-            }
-            return View(model);
-        }
-        public async Task<IActionResult> ProductEdit(int productId)
-        {
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, accessToken);
-            if (response != null && response.IsSuccess)
-            {
-                ProductDto model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
-                return View(model);
-            }
-            return NotFound();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProductEdit(ProductDto model)
-        {
-            if (ModelState.IsValid)
-            {
-                var accessToken = await HttpContext.GetTokenAsync("access_token");
-                var response = await _productService.UpdateProductAsync<ResponseDto>(model, accessToken);
+                
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(ProductIndex));
@@ -77,11 +55,11 @@ namespace Mango.Web.Controllers
             return View(model);
         }
 
-        [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> ProductDelete(int productId)
+        public async Task<IActionResult> ProductEdit(int productId)
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, accessToken);
+            
             if (response != null && response.IsSuccess)
             {
                 ProductDto model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
@@ -89,6 +67,39 @@ namespace Mango.Web.Controllers
             }
             return NotFound();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductEdit(ProductDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var accessToken = await HttpContext.GetTokenAsync("access_token");
+                var response = await _productService.UpdateProductAsync<ResponseDto>(model, accessToken);
+                
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(ProductIndex));
+                }
+            }
+
+            return View(model);
+        }
+
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> ProductDelete(int productId)
+        {
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, accessToken);
+        
+            if (response != null && response.IsSuccess)
+            {
+                ProductDto model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+                return View(model);
+            }
+            return NotFound();
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -103,6 +114,7 @@ namespace Mango.Web.Controllers
                     return RedirectToAction(nameof(ProductIndex));
                 }
             }
+
             return View(model);
         }
     }

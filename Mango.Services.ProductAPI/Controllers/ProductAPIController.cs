@@ -21,6 +21,7 @@ namespace Mango.Services.ProductAPI.Controllers
             _productRepository = productRepository;
             this._response = new ResponseDto();
         }
+
         [HttpGet]
         public async Task<object> Get()
         {
@@ -35,6 +36,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 _response.ErrorMessages
                      = new List<string>() { ex.ToString() };
             }
+
             return _response;
         }
 
@@ -53,9 +55,9 @@ namespace Mango.Services.ProductAPI.Controllers
                 _response.ErrorMessages
                      = new List<string>() { ex.ToString() };
             }
+
             return _response;
         }
-
 
         [HttpPost]
         [Authorize]

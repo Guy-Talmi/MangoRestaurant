@@ -44,6 +44,7 @@ namespace Mango.Web.Services
                 }
 
                 HttpResponseMessage apiResponse = null;
+                
                 switch (apiRequest.ApiType)
                 {
                     case SD.ApiType.POST:

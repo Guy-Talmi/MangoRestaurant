@@ -60,6 +60,7 @@ namespace Mango.Web.Services
                         message.Method = HttpMethod.Get;
                         break;
                 }
+
                 apiResponse = await client.SendAsync(message);
 
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();

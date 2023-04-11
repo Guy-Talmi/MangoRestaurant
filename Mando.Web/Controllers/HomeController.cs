@@ -21,7 +21,7 @@ namespace Mango.Web.Controllers
 		private readonly ICartService _cartService;
 
 		public HomeController(ILogger<HomeController> logger, IProductService productService,
-			ICartService cartService)
+							  ICartService cartService)
 		{
 			_logger = logger;
 			_cartService = cartService;
@@ -75,16 +75,20 @@ namespace Mango.Web.Controllers
 			};
 
 			var resp = await _productService.GetProductByIdAsync<ResponseDto>(productDto.ProductId, "");
+
 			if (resp != null && resp.IsSuccess)
 			{
 				cartDetails.Product = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(resp.Result));
 			}
+
 			List<CartDetailsDto> cartDetailsDtos = new();
 			cartDetailsDtos.Add(cartDetails);
 			cartDto.CartDetails = cartDetailsDtos;
 
 			var accessToken = await HttpContext.GetTokenAsync("access_token");
+			
 			var addToCartResp = await _cartService.AddToCartAsync<ResponseDto>(cartDto, accessToken);
+
 			if (addToCartResp != null && addToCartResp.IsSuccess)
 			{
 				return RedirectToAction(nameof(Index));

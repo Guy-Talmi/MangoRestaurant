@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Mango.Web.Services
 {
-    public class CouponService : BaseService,ICouponService
+    public class CouponService : BaseService, ICouponService
     {
         private readonly IHttpClientFactory _clientFactory;
 
@@ -16,6 +16,7 @@ namespace Mango.Web.Services
         {
             _clientFactory = clientFactory;
         }
+
         public async Task<T> GetCoupon<T>(string couponCode, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()

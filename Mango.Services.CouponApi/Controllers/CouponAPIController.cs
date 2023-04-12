@@ -6,12 +6,12 @@ namespace Mango.Services.CouponApi.Controllers
 {
     [ApiController]
     [Route("api/coupon")]
-    public class CouponController : Controller
+    public class CouponAPIController : Controller
     {
         private readonly ICouponRepository _couponRepository;
         protected ResponseDto _response;
 
-        public CouponController(ICouponRepository couponRepository)
+        public CouponAPIController(ICouponRepository couponRepository)
         {
             _couponRepository = couponRepository;
             _response = new ResponseDto();
@@ -24,7 +24,6 @@ namespace Mango.Services.CouponApi.Controllers
             {
                 var coupon = await _couponRepository.GetCouponByCode(code);
                 _response.Result = coupon;
-
             }
             catch (Exception ex)
             {

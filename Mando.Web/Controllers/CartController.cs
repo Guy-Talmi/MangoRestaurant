@@ -33,13 +33,16 @@ namespace Mango.Web.Controllers
 		public async Task<IActionResult> ApplyCoupon(CartDto cartDto)
 		{
 			var userId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
+
 			var accessToken = await HttpContext.GetTokenAsync("access_token");
+
 			var response = await _cartService.ApplyCoupon<ResponseDto>(cartDto, accessToken);
 
 			if (response != null && response.IsSuccess)
 			{
 				return RedirectToAction(nameof(CartIndex));
 			}
+
 			return View();
 		}
 
@@ -48,13 +51,16 @@ namespace Mango.Web.Controllers
 		public async Task<IActionResult> RemoveCoupon(CartDto cartDto)
 		{
 			var userId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
+
 			var accessToken = await HttpContext.GetTokenAsync("access_token");
+
 			var response = await _cartService.RemoveCoupon<ResponseDto>(cartDto.CartHeader.UserId, accessToken);
 
 			if (response != null && response.IsSuccess)
 			{
 				return RedirectToAction(nameof(CartIndex));
 			}
+
 			return View();
 		}
 
@@ -85,12 +91,15 @@ namespace Mango.Web.Controllers
 			try
 			{
 				var accessToken = await HttpContext.GetTokenAsync("access_token");
+
 				var response = await _cartService.Checkout<ResponseDto>(cartDto.CartHeader, accessToken);
+
 				if (!response.IsSuccess)
 				{
 					TempData["Error"] = response.DisplayMessage;
 					return RedirectToAction(nameof(Checkout));
 				}
+
 				return RedirectToAction(nameof(Confirmation));
 			}
 			catch (Exception e)
@@ -124,9 +133,11 @@ namespace Mango.Web.Controllers
 				if (!string.IsNullOrEmpty(cartDto.CartHeader.CouponCode))
 				{
 					var coupon = await _couponService.GetCoupon<ResponseDto>(cartDto.CartHeader.CouponCode, accessToken);
+
 					if (coupon != null && coupon.IsSuccess)
 					{
 						var couponObj = JsonConvert.DeserializeObject<CouponDto>(Convert.ToString(coupon.Result));
+
 						cartDto.CartHeader.DiscountTotal = couponObj.DiscountAmount;
 					}
 				}

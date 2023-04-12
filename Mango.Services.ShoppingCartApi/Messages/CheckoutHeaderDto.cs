@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Mango.Services.ShoppingCartApi.Models.Dto;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Mango.Web.Models
+namespace Mango.Services.ShoppingCartApi.Messages
 {
-    public class CartHeaderDto
+    public class CheckoutHeaderDto
     {
         public int CartHeaderId { get; set; }
 
@@ -14,7 +13,7 @@ namespace Mango.Web.Models
         public string CouponCode { get; set; }
 
         public double OrderTotal { get; set; }
-        
+
         public double DiscountTotal { get; set; }
 
         public string FirstName { get; set; }
@@ -32,5 +31,9 @@ namespace Mango.Web.Models
         public string CVV { get; set; }
 
         public string ExpiryMonthYear { get; set; }
+
+        public int CartTotalItems { get; set; }
+
+        public IEnumerable<CartDetailsDto> CartDetails { get; set; }
     }
 }

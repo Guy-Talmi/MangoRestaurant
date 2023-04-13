@@ -66,7 +66,6 @@ namespace Mango.Web.Services
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();
                 var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
                 return apiResponseDto;
-
             }
             catch(Exception e)
             {

@@ -15,6 +15,7 @@ namespace Mango.Services.OrderAPI.Messaging
         private readonly string SubscriptionCheckout;
         private readonly string orderPaymentProcessTopic;
         private readonly string orderUpdatePaymentResultTopic;
+        private readonly string checkoutQueue;
 
         private readonly IConfiguration _configuration;
         private readonly IMessageBus _messageBus;
@@ -36,10 +37,13 @@ namespace Mango.Services.OrderAPI.Messaging
             checkoutMessageTopic = _configuration.GetValue<string>("CheckoutMessageTopic");
             orderPaymentProcessTopic = _configuration.GetValue<string>("OrderPaymentProcessTopic");
             orderUpdatePaymentResultTopic = _configuration.GetValue<string>("OrderUpdatePaymentResultTopic");
+            checkoutQueue = _configuration.GetValue<string>("CheckoutQueue");
 
             var client = new ServiceBusClient(serviceBusConnectionString);
 
-            checkOutProcessor = client.CreateProcessor(checkoutMessageTopic, SubscriptionCheckout);
+            checkOutProcessor = client.CreateProcessor(checkoutQueue);
+
+            //checkOutProcessor = client.CreateProcessor(checkoutMessageTopic, SubscriptionCheckout);
             orderUpdatePaymentStatusProcessor = client.CreateProcessor(orderUpdatePaymentResultTopic, SubscriptionCheckout);
         }
 
@@ -120,7 +124,8 @@ namespace Mango.Services.OrderAPI.Messaging
                 CVV = orderHeader.CVV,
                 ExpiryMonthYear = orderHeader.ExpiryMonthYear,
                 OrderId = orderHeader.OrderHeaderId,
-                OrderTotal = orderHeader.OrderTotal
+                OrderTotal = orderHeader.OrderTotal,
+                Email = orderHeader.Email
             };
 
             try

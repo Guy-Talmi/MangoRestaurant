@@ -1,4 +1,5 @@
-﻿using Mango.Services.OrderAPI.DbContexts;
+﻿using Mango.MessageBus;
+using Mango.Services.OrderAPI.DbContexts;
 using Mango.Services.OrderAPI.Extension;
 using Mango.Services.OrderAPI.Messaging;
 using Mango.Services.OrderAPI.Repository;
@@ -46,9 +47,10 @@ namespace Mango.Services.OrderAPI
             services.AddSingleton(new OrderRepository(optionBuilder.Options));
 
             services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
+            services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 
             //services.AddScoped<ICouponRepository, CouponRepository>();
-            //services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
+
             //services.AddSingleton<IRabbitMQCartMessageSender, RabbitMQCartMessageSender>();
 
             services.AddControllers();

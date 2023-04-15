@@ -1,0 +1,13 @@
+15672
+http://localhost:15672/
+http://localhost:15672/
+
+guest
+guest
+
+rabbitmq-server stop
+
+c:/Users/guyt/AppData/Roaming/RabbitMQ/advanced.config
+ERROR: could not bind
+
+to distribution port 25672, it is in use by another node: rabbit@guyt

@@ -74,6 +74,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 _response.ErrorMessages
                      = new List<string>() { ex.ToString() };
             }
+
             return _response;
         }
 
@@ -93,6 +94,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 _response.ErrorMessages
                      = new List<string>() { ex.ToString() };
             }
+
             return _response;
         }
 
@@ -112,6 +114,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 _response.ErrorMessages
                      = new List<string>() { ex.ToString() };
             }
+
             return _response;
         }
     }

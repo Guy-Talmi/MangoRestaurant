@@ -52,6 +52,7 @@ namespace Mango.Web.Controllers
                     return RedirectToAction(nameof(ProductIndex));
                 }
             }
+
             return View(model);
         }
 
@@ -97,6 +98,7 @@ namespace Mango.Web.Controllers
                 ProductDto model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
                 return View(model);
             }
+
             return NotFound();
         }
 
@@ -108,6 +110,7 @@ namespace Mango.Web.Controllers
             if (ModelState.IsValid)
             {
                 var accessToken = await HttpContext.GetTokenAsync("access_token");
+
                 var response = await _productService.DeleteProductAsync<ResponseDto>(model.ProductId, accessToken);
                 
                 if (response.IsSuccess)

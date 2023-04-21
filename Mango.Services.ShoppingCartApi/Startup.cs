@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Mango.MessageBus;
 using Mango.Services.ShoppingCartApi.DbContexts;
+using Mango.Services.ShoppingCartApi.RabbitMQSender;
 using Mango.Services.ShoppingCartApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,7 +45,7 @@ namespace Mango.Services.ShoppingCartApi
             services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 
             //services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
-            //services.AddSingleton<IRabbitMQCartMessageSender, RabbitMQCartMessageSender>();
+            services.AddSingleton<IRabbitMQCartMessageSender, RabbitMQCartMessageSender>();
 
             services.AddControllers();
 

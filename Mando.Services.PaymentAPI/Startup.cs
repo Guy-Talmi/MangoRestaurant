@@ -1,6 +1,8 @@
-﻿using Mango.MessageBus;
+﻿using Mando.Services.PaymentAPI.Messaging;
+using Mango.MessageBus;
 using Mango.Services.PaymentAPI.Extension;
 using Mango.Services.PaymentAPI.Messaging;
+using Mango.Services.PaymentAPI.RabbitMQSender;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,9 +35,11 @@ namespace Mango.Services.PaymentAPI
             services.AddSingleton<IProcessPayment, ProcessPayment>();
             services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
             services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
+            services.AddHostedService<RabbitMQCheckoutConsumer>();
+            services.AddSingleton<IRabbitMQPaymentMessageSender, RabbitMQPaymentMessageSender>();
 
             services.AddControllers();
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mango.Services.PaymentAPI", Version = "v1" });

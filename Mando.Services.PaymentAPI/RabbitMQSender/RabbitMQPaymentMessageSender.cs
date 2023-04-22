@@ -14,7 +14,10 @@ namespace Mango.Services.PaymentAPI.RabbitMQSender
 
         private IConnection _connection;
 
-        private const string ExchangeName = "DirectPaymentUpdate_Exchange";
+        //private const string ExchangeName = "DirectPaymentUpdate_Exchange";
+        private const string ExchangeName = "DirectPaymentUpdate_Exchange_2";
+        private const string PaymentEmailUpdateQueueName = "PaymentEmailUpdateQueueName";
+        private const string PaymentOrderUpdateQueueName = "PaymentOrderUpdateQueueName";
 
         public RabbitMQPaymentMessageSender()
         {
@@ -29,11 +32,21 @@ namespace Mango.Services.PaymentAPI.RabbitMQSender
             {
                 using var channel = _connection.CreateModel();
 
-                channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Fanout, durable: false);
+                //channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Fanout, durable: false);
+                channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct, durable: false);
+                
+                channel.QueueDeclare(queue: PaymentEmailUpdateQueueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                channel.QueueDeclare(queue: PaymentOrderUpdateQueueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+
+                channel.QueueBind(queue: PaymentEmailUpdateQueueName, exchange: ExchangeName, routingKey: "PaymentEmail");
+                channel.QueueBind(queue: PaymentOrderUpdateQueueName, exchange: ExchangeName, routingKey: "PaymentOrder");
 
                 var json = JsonConvert.SerializeObject(message);
                 var body = Encoding.UTF8.GetBytes(json);
-                channel.BasicPublish(exchange: ExchangeName, "", basicProperties: null, body: body);
+
+                //channel.BasicPublish(exchange: ExchangeName, "", basicProperties: null, body: body);
+                channel.BasicPublish(exchange: ExchangeName, "PaymentEmail", basicProperties: null, body: body);
+                channel.BasicPublish(exchange: ExchangeName, "PaymentOrder", basicProperties: null, body: body);
             }
         }
 

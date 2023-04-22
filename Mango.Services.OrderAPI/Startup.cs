@@ -1,4 +1,5 @@
-﻿using Mango.MessageBus;
+﻿using Mando.Services.OrderAPI.Messaging;
+using Mango.MessageBus;
 using Mango.Services.OrderAPI.DbContexts;
 using Mango.Services.OrderAPI.Extension;
 using Mango.Services.OrderAPI.Messaging;
@@ -38,6 +39,7 @@ namespace Mango.Services.OrderAPI
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddHostedService<RabbitMQCheckoutConsumer>();
+            services.AddHostedService<RabbitMQPaymentConsumer>();
 
             //IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             //services.AddSingleton(mapper);

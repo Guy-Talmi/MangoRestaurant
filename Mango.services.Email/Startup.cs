@@ -1,4 +1,5 @@
-﻿using Mango.Services.Email.DbContexts;
+﻿using Mando.Services.Email.Messaging;
+using Mango.Services.Email.DbContexts;
 using Mango.Services.Email.Extension;
 using Mango.Services.Email.Messaging;
 using Mango.Services.Email.Repository;
@@ -35,6 +36,7 @@ namespace Mango.Services.Email
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //services.AddScoped<IEmailRepository, EmailRepository>();
+            services.AddHostedService<RabbitMQPaymentConsumer>();
 
             var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
